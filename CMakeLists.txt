@@ -1,18 +1,18 @@
-#include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../include
-#	${CMAKE_CURRENT_SOURCE_DIR}/include)
-#file (GLOB_RECURSE SOURCES_TEST ${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp
-#	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+cmake_minimum_required(VERSION 3.0)
 
-include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../include)
-file (GLOB_RECURSE SOURCES_TEST ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+set(mnet_include /home/guest/multinet/multinet/include)
+set(mnet_lib_spectra_include /home/guest/multinet/multinet/lib/)
+set(mnet_lib_dlib_include /home/guest/multinet/multinet/lib/dlib)
+set(mnet_lib_eigen_include /home/guest/multinet/multinet/lib/eigen)
 
-add_executable (multinet-tests ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${SOURCES_TEST})
+include_directories (${mnet_include} ${mnet_lib_include} ${mnet_lib_dlib_include} ${mnet_lib_eigen_include})
+link_directories(/home/guest/multinet/multinet/)
 
-target_link_libraries (multinet-tests multinet -lblas -lboost_serialization)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -Wall -Wextra -DNDEBUG -DDLIB_NO_GUI_SUPPORT -O4 -fopenmp -fmessage-length=0 -funroll-loops -fno-omit-frame-pointer -march=native -fsanitize=address")
 
-add_custom_command(TARGET multinet-tests
-	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_directory
-	${CMAKE_CURRENT_SOURCE_DIR}/data $<TARGET_FILE_DIR:multinet-tests>
-	COMMENT "Copying testing datasets."
-	VERBATIM)
+
+file (GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+
+add_executable (multinet-evaluation ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+target_link_libraries (multinet-evaluation -lmultinet -lblas)
+

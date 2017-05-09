@@ -10,57 +10,38 @@ function timestamp:long(ts) {
   return gettimeofday_ms() - ts
 }
 
-probe process("libmultinet.so").function("mlnet::cutils::ml_network2adj_matrix")
+probe process("libmultinet.so").function("mlnet::lart::fit")
 {
-  tmp_ts["ml_network2adj_matrix", "start"] = gettimeofday_ms();
+  tmp_ts["lart", "start"] = gettimeofday_ms();
 }
 
-probe process("libmultinet.so").mark("ml2am__end")
+probe process("libmultinet.so").function("mlnet::glouvain::fit")
 {
-  printf("Finished reading network to matrix in %s. Layers: %d Dims: %d x %d\n",
-    msecs_to_string(timestamp(tmp_ts["ml_network2adj_matrix", "start"])), $arg1, $arg2, $arg2);
+  tmp_ts["glouvain", "start"] = gettimeofday_ms();
 }
 
-probe process("libmultinet.so").function("mlnet::cutils::supraA")
+probe process("libmultinet.so").function("mlnet::pmm::fit")
 {
-  tmp_ts["supraA", "start"] = gettimeofday_ms();
+  tmp_ts["pmm", "start"] = gettimeofday_ms();
 }
 
-probe process("libmultinet.so").function("mlnet::cutils::supraA").return
+probe process("libmultinet.so").mark("lart_end")
 {
-  printf("Finished with supraA: %s\n", msecs_to_string(timestamp(tmp_ts["supraA", "start"])));
+  printf("LART: %s, %s, %d, %s,%s, %d\n",
+    msecs_to_string(timestamp(tmp_ts["lart", "start"])), user_string($arg1), $arg2, user_string($arg3), user_string($arg4), $arg5);
 }
 
-probe process("libmultinet.so").mark("walk__start")
+probe process("libmultinet.so").mark("glouvain_end")
 {
-  tmp_ts["mp", "start"] = gettimeofday_ms();
+  printf("GLOUVAIN: %s, %s, %s, %s, %s, %d\n",
+    msecs_to_string(timestamp(tmp_ts["glouvain", "start"])), user_string($arg1), user_string($arg2), user_string($arg3), user_string($arg4), $arg5);
 }
 
-probe process("libmultinet.so").mark("walk__end")
+probe process("libmultinet.so").mark("pmm_end")
 {
-  printf("Finished with walking: %s\n", msecs_to_string(timestamp(tmp_ts["mp", "start"])));
+  printf("PMM %s, %s, %d, %d, %d\n",
+    msecs_to_string(timestamp(tmp_ts["pmm", "start"])), user_string($arg1), $arg2, $arg3, $arg4);
 }
-
-probe process("libmultinet.so").function("mlnet::lart::Dmat")
-{
-  tmp_ts["dmat", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").function("mlnet::lart::Dmat").return
-{
-  printf("Finished with Dmat: %s\n", msecs_to_string(timestamp(tmp_ts["dmat", "start"])));
-}
-
-probe process("libmultinet.so").mark("cluster__start")
-{
-  tmp_ts["cluster", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").mark("cluster__end")
-{
-  printf("Finished clustering in %s with %d clusters \n", msecs_to_string(timestamp(tmp_ts["cluster", "start"])), $arg1);
-}
-
 
 probe end
 {
