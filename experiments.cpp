@@ -41,8 +41,8 @@ void tLART(mlnet::MLNetworkSharedPtr mnet) {
 
 void tGLOUVAIN(mlnet::MLNetworkSharedPtr mnet) {
 	std::vector<std::string> method = {"moverandw", "move"};
-	std::vector<double> gamma = {0.1, 0.2, 0.5, 1.0};
-	std::vector<double> omega = {0.1, 0.2, 0.5, 1.0};
+	std::vector<double> gamma = {0.5, 1.0};
+	std::vector<double> omega = {0.0, 0.2, 0.5, 1.0};
 
 	std::string format = mnet->name + "/GLOUVAIN_";
 

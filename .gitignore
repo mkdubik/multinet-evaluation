@@ -1,4 +1,13 @@
-build/
 data/
 results/
-telemetry/
+truth/
+experiments
+evaluation
+
+libmultinet.so
+
+#Cmake junk
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
