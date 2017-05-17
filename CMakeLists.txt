@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 set(mnet_include /home/guest/multinet/multinet/include)
 set(mnet_lib_spectra_include /home/guest/multinet/multinet/lib/)
 set(mnet_lib_dlib_include /home/guest/multinet/multinet/lib/dlib)
-set(mnet_lib_eigen_include /home/guest/multinet/multinet/lib/eigen)
+set(mnet_lib_eigen_include /home/guest/multinet/multinet/lib/eigen3)
 
 include_directories (${mnet_include} ${mnet_lib_include} ${mnet_lib_dlib_include} ${mnet_lib_eigen_include})
 link_directories(/home/guest/multinet/multinet/)

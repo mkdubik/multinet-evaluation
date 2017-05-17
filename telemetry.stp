@@ -4,6 +4,7 @@ global start
 probe begin
 {
   start = gettimeofday_ms();
+  printf("Starting run %s", ctime(gettimeofday_s()));
 }
 
 function timestamp:long(ts) {
