@@ -1,6 +1,11 @@
 data/
 results/
 truth/
+telemetry/pmm
+telemetry/lart
+telemetry/glouvain
+telemetry/raw.json
+
 experiments
 evaluation
 
@@ -11,3 +16,4 @@ CMakeCache.txt
 CMakeFiles/
 Makefile
 cmake_install.cmake
+

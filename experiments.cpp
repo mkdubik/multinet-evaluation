@@ -30,9 +30,6 @@ void tLART(mlnet::MLNetworkSharedPtr mnet) {
 									std::to_string(t[i]) + "_" +
 									std::to_string(eps[j]) + "_" +
 									std::to_string(gamma[k]);
-
-				std::cout << path << std::endl;
-
 				write(l.fit(mnet, t[i], eps[j], gamma[k]), path);
 			}
 		}
@@ -54,11 +51,7 @@ void tGLOUVAIN(mlnet::MLNetworkSharedPtr mnet) {
 									std::to_string(gamma[j]) + "_" +
 									std::to_string(omega[k]) + "_" +
 									method[i];
-
-				std::cout << path << std::endl;
-
 				write(g.fit(mnet, method[i], gamma[j], omega[k]), path);
-
 			}
 		}
 	}
@@ -74,25 +67,18 @@ void tPMM(mlnet::MLNetworkSharedPtr mnet) {
 		std::string path = format +
 							std::to_string(k[i]) + "_" +
 							std::to_string(k[i]);
-
-		std::cout << path << std::endl;
-
 		write(p.fit(mnet, k[i], k[i] + 2), path);
 	}
 }
 
 int main() {
-	result_path = "../multinet-evaluation/results/";
-	data_path = "../multinet-evaluation/data/";
+	result_path = "results/";
+	data_path = "data/";
 
-	/* !!WARNING!! Calling rm -rf on wrong path can result in data loss!!! */
-	/* Hardcoded for safety */
-	if(system(("rm -rf ../multinet-evaluation/results/"))) {
+	if(system(("mkdir -p results/"))) {
 		return 1;
 	}
-	if(system(("mkdir -p ../multinet-evaluation/results/"))) {
-		return 1;
-	}
+
 	std::vector<std::pair<std::string, std::string>> datasets = {
 		{"aucs", ","},
 		{"dk", ","},
