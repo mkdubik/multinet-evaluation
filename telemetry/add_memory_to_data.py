@@ -1,7 +1,8 @@
+import sys
 from pdb import set_trace
 
 data = {}
-with open('telemetry/raw.json') as fd:
+with open(sys.argv[1]) as fd:
 	data = eval(fd.read().replace(',\n]', ']').replace('},\n]', '}]\n'))
 
 def process_memory_log(contents):
@@ -33,12 +34,48 @@ def process_lart(obj):
 	obj['memory'] = memory
 
 def process_glouvain(obj):
-	set_trace()
-	pass
+	fl = 'pass_{p}_{dataset}_{move}_{gamma}_{omega}.log'
+	memory = {}
+
+	for p in obj['passes'].keys():
+		tmp = fl.format(p = p,
+						dataset = obj['params']['dataset'],
+						move = obj['params']['move'],
+						gamma = obj['params']['gamma'],
+						omega = obj['params']['omega'])
+
+		with open('telemetry/glouvain/' + tmp) as fd:
+			memory[p] = process_memory_log(fd.read())
+
+	obj['memory'] = memory
 
 def process_pmm(obj):
+	svd = 'svd_{dataset}_{k}_{ell}.log'
+	kmeans = 'kmeans_{dataset}_{k}_{ell}.log'
+	memory = {}
+
+	if 'error' in obj['params']:
+		return
+
+	tmp = svd.format(dataset = obj['params']['dataset'],
+					k = obj['params']['k'],
+					ell = obj['params']['ell'])
+
 	set_trace()
-	pass
+	with open('telemetry/pmm/' + tmp) as fd:
+		memory['svd'] = process_memory_log(fd.read())
+
+	tmp = kmeans.format(dataset = obj['params']['dataset'],
+					k = obj['params']['k'],
+					ell = obj['params']['ell'])
+
+	with open('telemetry/pmm/' + tmp) as fd:
+		memory['kmeans'] = process_memory_log(fd.read())
+
+	obj['memory'] = memory
+
+
+
 
 methods = {
 	"lart": process_lart,
@@ -46,8 +83,9 @@ methods = {
 	"pmm": process_pmm
 }
 
-
 for obj in data:
 	func = methods[obj['method']]
 	func(obj)
 
+
+set_trace()

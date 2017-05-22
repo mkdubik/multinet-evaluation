@@ -207,5 +207,4 @@ probe process("libmultinet.so").mark("pmm_end")
 probe end
 {
   print("]\n");
-  /*  Post process the memory things from the sys calls with a python script */
 }
