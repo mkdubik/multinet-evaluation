@@ -61,7 +61,6 @@ def process_pmm(obj):
 					k = obj['params']['k'],
 					ell = obj['params']['ell'])
 
-	set_trace()
 	with open('telemetry/pmm/' + tmp) as fd:
 		memory['svd'] = process_memory_log(fd.read())
 

@@ -14,7 +14,6 @@ probe begin
 }
 
 /* START OF LART INSTRUMENTATION */
-
 probe process("libmultinet.so").mark("lart_start")
 {
   start = gettimeofday_ms();

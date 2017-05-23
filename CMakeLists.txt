@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 set(mnet_include /home/guest/multinet/multinet/include)
-set(mnet_lib_spectra_include /home/guest/multinet/multinet/lib/)
+set(mnet_lib_spectra_include /home/guest/multinet/multinet/lib/spectra)
 set(mnet_lib_dlib_include /home/guest/multinet/multinet/lib/dlib)
 set(mnet_lib_eigen_include /home/guest/multinet/multinet/lib/eigen3)
 
@@ -13,8 +13,4 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -Wall -Wextra -DNDEBUG -DD
 file (GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/experiments.cpp)
 add_executable (experiments ${CMAKE_CURRENT_SOURCE_DIR}/experiments.cpp)
 
-file (GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/evaluation.cpp)
-add_executable (evaluation ${CMAKE_CURRENT_SOURCE_DIR}/evaluation.cpp)
-
 target_link_libraries (experiments -lmultinet -lblas)
-target_link_libraries (evaluation -lmultinet -lblas)
