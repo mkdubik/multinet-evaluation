@@ -155,13 +155,14 @@ probe process("libmultinet.so").mark("pmm_start")
   dataset = user_string($arg1);
   k = $arg2;
   ell = $arg3;
+  gamma = user_string($arg4);
 
   print("{");
   printf("\"method\": \"pmm\",\n");
-  printf("\"params\": {\"dataset\":\"%s\",\n\"k\": %d,\n\"ell\":%d},\n", dataset, k, ell);
+  printf("\"params\": {\"dataset\":\"%s\",\"k\": %d,\"ell\":%d, \"gamma\": %s},\n", dataset, k, ell, gamma);
   printf("\"feature_ts\": [\n");
 
-  params = sprintf("%s_%d_%d", dataset, k, ell);
+  params = sprintf("%s_%d_%d_%s", dataset, k, ell, gamma);
 }
 
 probe process("libmultinet.so").function("mlnet::pmm::modularitymaximization")

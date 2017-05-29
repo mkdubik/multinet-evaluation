@@ -96,8 +96,8 @@ class aggregate_results:
 
 
 	def process_pmm(self, obj):
-		svd = 'svd_{dataset}_{k}_{ell}.log'
-		kmeans = 'kmeans_{dataset}_{k}_{ell}.log'
+		svd = 'svd_{dataset}_{k}_{ell}_{gamma}.log'
+		kmeans = 'kmeans_{dataset}_{k}_{ell}_{gamma}.log'
 		memory = {}
 
 		if 'error' in obj['params']:
@@ -105,22 +105,25 @@ class aggregate_results:
 
 		tmp = svd.format(dataset = obj['params']['dataset'],
 						k = obj['params']['k'],
-						ell = obj['params']['ell'])
+						ell = obj['params']['ell'],
+						gamma = obj['params']['gamma'])
 
 		with open('telemetry/pmm/' + tmp) as fd:
 			memory['svd'] = self.process_memory_log(fd.read())
 
 		tmp = kmeans.format(dataset = obj['params']['dataset'],
 						k = obj['params']['k'],
-						ell = obj['params']['ell'])
+						ell = obj['params']['ell'],
+						gamma = obj['params']['gamma'])
 
 		with open('telemetry/pmm/' + tmp) as fd:
 			memory['kmeans'] = process_memory_log(fd.read())
 
-		fl = 'results/{dataset}/PMM_{k}_{ell}'.format(
+		fl = 'results/{dataset}/PMM_{k}_{ell}_{gamma}'.format(
 							dataset = obj['params']['dataset'],
-							gamma = obj['params']['k'],
-							omega = obj['params']['ell'])
+							k = obj['params']['k'],
+							ell = obj['params']['ell'],
+							gamma = obj['params']['ell'])
 
 		obj['accuracy'] = self.process_accuracy(fl)
 
