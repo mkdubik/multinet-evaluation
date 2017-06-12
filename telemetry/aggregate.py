@@ -1,12 +1,12 @@
 import sys
 from pdb import set_trace
-
+import json
 
 class aggregate_results:
 
-	def aggregate():
+	def aggregate(self, name):
 		data = {}
-		with open(sys.argv[1]) as fd:
+		with open(name) as fd:
 			data = eval(fd.read().replace(',\n]', ']').replace('},\n]', '}]\n'))
 
 		methods = {
@@ -19,7 +19,7 @@ class aggregate_results:
 			func = methods[obj['method']]
 			func(obj)
 
-		return obj
+		return data
 
 
 
@@ -35,8 +35,9 @@ class aggregate_results:
 	def process_accuracy(self, filename):
 		accuracy = {}
 		with open(filename) as fd:
-			modularity, nmi, comm_ratio = fd.read().replace('\n', '').split(',')
-			accuracy['modularity'] = modularity
+			modularity_result, modularity_gt, nmi, comm_ratio = fd.read().replace('\n', '').split(',')
+			accuracy['modularity_result'] = modularity_result
+			accuracy['modularity_gt'] = modularity_gt
 			accuracy['nmi'] = nmi
 			accuracy['comm_ratio'] = comm_ratio
 
@@ -81,8 +82,12 @@ class aggregate_results:
 							gamma = obj['params']['gamma'],
 							omega = obj['params']['omega'])
 
-			with open('telemetry/glouvain/' + tmp) as fd:
-				memory[p] = process_memory_log(fd.read())
+
+			try:
+				with open('telemetry/glouvain/' + tmp) as fd:
+					memory[p] = self.process_memory_log(fd.read())
+			except:
+				pass
 
 		obj['memory'] = memory
 
@@ -96,8 +101,8 @@ class aggregate_results:
 
 
 	def process_pmm(self, obj):
-		svd = 'svd_{dataset}_{k}_{ell}_{gamma}.log'
-		kmeans = 'kmeans_{dataset}_{k}_{ell}_{gamma}.log'
+		svd = 'svd_{dataset}_{k}_{ell}.log'
+		kmeans = 'kmeans_{dataset}_{k}_{ell}.log'
 		memory = {}
 
 		if 'error' in obj['params']:
@@ -105,25 +110,43 @@ class aggregate_results:
 
 		tmp = svd.format(dataset = obj['params']['dataset'],
 						k = obj['params']['k'],
-						ell = obj['params']['ell'],
-						gamma = obj['params']['gamma'])
+						ell = obj['params']['ell'])
 
 		with open('telemetry/pmm/' + tmp) as fd:
 			memory['svd'] = self.process_memory_log(fd.read())
 
 		tmp = kmeans.format(dataset = obj['params']['dataset'],
 						k = obj['params']['k'],
-						ell = obj['params']['ell'],
-						gamma = obj['params']['gamma'])
+						ell = obj['params']['ell'])
 
 		with open('telemetry/pmm/' + tmp) as fd:
-			memory['kmeans'] = process_memory_log(fd.read())
+			memory['kmeans'] = self.process_memory_log(fd.read())
 
-		fl = 'results/{dataset}/PMM_{k}_{ell}_{gamma}'.format(
+		obj['memory'] = memory
+
+		fl = 'results/{dataset}/PMM_{k}_{ell}'.format(
 							dataset = obj['params']['dataset'],
 							k = obj['params']['k'],
-							ell = obj['params']['ell'],
-							gamma = obj['params']['ell'])
+							ell = obj['params']['ell'])
 
 		obj['accuracy'] = self.process_accuracy(fl)
+
+
+
+def main():
+	from json import dumps
+	from pdb import set_trace;
+	a = aggregate_results()
+	data = a.aggregate(sys.argv[1])
+
+	set_trace()
+
+main()
+
+
+
+
+
+
+
 

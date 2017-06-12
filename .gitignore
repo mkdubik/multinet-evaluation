@@ -1,6 +1,5 @@
-data/
 results/
-truth/
+
 telemetry/pmm
 telemetry/lart
 telemetry/glouvain

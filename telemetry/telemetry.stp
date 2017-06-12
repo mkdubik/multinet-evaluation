@@ -9,7 +9,6 @@ global params
 
 probe begin
 {
-  system("./cleanup.sh");
   print("[");
 }
 
@@ -28,17 +27,6 @@ probe process("libmultinet.so").mark("lart_start")
   printf("\"timestamps\": {\n");
   params = sprintf("%s_%d_%s_%s", dataset, walks, eps, gamma);
 
-}
-
-probe process("libmultinet.so").function("mlnet::lart::supraA")
-{
-  tmp_ts["supraA", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").function("mlnet::lart::supraA").return
-{
-  system(sprintf("cat /proc/%d/status > telemetry/lart/supraA_%s.log", pid(), params));
-  printf("\"supraA\": %d,\n", timestamp(tmp_ts["supraA", "start"]))
 }
 
 probe process("libmultinet.so").function("mlnet::lart::prcheck")
@@ -124,7 +112,7 @@ probe process("libmultinet.so").mark("glouvain_pass")
 {
   system(sprintf("cat /proc/%d/status > telemetry/glouvain/pass_%d_%s.log", pid(), $arg1, params));
   tmp_ts["pass", "start"] = gettimeofday_ms();
-  printf("\"%d\": {\"Q\": %s,\"phase\": [\n", $arg1, user_string($arg4));
+  printf("\"%d\": {\"phase\": [\n", $arg1);
 }
 
 probe process("libmultinet.so").mark("glouvain_first_phase_start")
@@ -155,34 +143,19 @@ probe process("libmultinet.so").mark("pmm_start")
   dataset = user_string($arg1);
   k = $arg2;
   ell = $arg3;
-  gamma = user_string($arg4);
 
   print("{");
   printf("\"method\": \"pmm\",\n");
-  printf("\"params\": {\"dataset\":\"%s\",\"k\": %d,\"ell\":%d, \"gamma\": %s},\n", dataset, k, ell, gamma);
+  printf("\"params\": {\"dataset\":\"%s\",\"k\": %d,\"ell\":%d},\n", dataset, k, ell);
   printf("\"feature_ts\": [\n");
 
-  params = sprintf("%s_%d_%d_%s", dataset, k, ell, gamma);
-}
-
-probe process("libmultinet.so").function("mlnet::pmm::modularitymaximization")
-{
+  params = sprintf("%s_%d_%d", dataset, k, ell);
   tmp_ts["feature", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").mark("pmm_features_end")
-{
-  printf("%d, ", timestamp(tmp_ts["feature", "start"]));
-}
-
-probe process("libmultinet.so").mark("pmm_error")
-{
-  printf("], \"error\": \"%s\"\n},", user_string($arg1));
-  delete tmp_ts;
 }
 
 probe process("libmultinet.so").mark("pmm_svd_start")
 {
+  printf("%d, ", timestamp(tmp_ts["feature", "start"]));
   system(sprintf("cat /proc/%d/status > telemetry/pmm/svd_%s.log", pid(), params));
   printf("],");
   tmp_ts["svd", "start"] = gettimeofday_ms();
