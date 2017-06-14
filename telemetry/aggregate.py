@@ -21,8 +21,6 @@ class aggregate_results:
 
 		return data
 
-
-
 	def process_memory_log(self, contents):
 		mem = [item for item in contents.split('\n')]
 		for m in mem:

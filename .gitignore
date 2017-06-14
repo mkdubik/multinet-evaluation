@@ -1,14 +1,14 @@
 results/
 
-telemetry/pmm
-telemetry/lart
-telemetry/glouvain
-telemetry/raw.json
+telemetry/
+!telemetry/aggregate.py
+!telemetry/telemetry.stp
 
-experiments
-evaluation
+performance
+accuracy
+dk
 
-libmultinet.so
+libmlnet_evaluation.so
 
 #Cmake junk
 CMakeCache.txt

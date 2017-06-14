@@ -1,5 +1,6 @@
-global tmp_ts /* construct to hold temporary timestamps */
+global tmp_ts
 global start
+global dataset
 
 function timestamp:long(ts) {
   return gettimeofday_ms() - ts
@@ -7,87 +8,22 @@ function timestamp:long(ts) {
 
 global params
 
-probe begin
-{
-  print("[");
-}
-
 /* START OF LART INSTRUMENTATION */
 probe process("libmultinet.so").mark("lart_start")
 {
   start = gettimeofday_ms();
   dataset = user_string($arg1);
-  walks = $arg2;
-  eps = user_string($arg3);
-  gamma = user_string($arg4);
-
-  print("{");
-  printf("\"method\": \"lart\",\n");
-  printf("\"params\": {\"dataset\":\"%s\",\n\"walks\":%d,\n\"eps\":\"%s\",\n\"gamma\":\"%s\"},\n", dataset, walks, eps, gamma);
-  printf("\"timestamps\": {\n");
-  params = sprintf("%s_%d_%s_%s", dataset, walks, eps, gamma);
-
-}
-
-probe process("libmultinet.so").function("mlnet::lart::prcheck")
-{
-  tmp_ts["prcheck", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").function("mlnet::lart::prcheck").return
-{
-  system(sprintf("cat /proc/%d/status > telemetry/lart/prcheck_%s.log", pid(), params));
-  printf("\"prcheck\": %d,\n", timestamp(tmp_ts["prcheck", "start"]))
-}
-
-probe process("libmultinet.so").function("mlnet::lart::updateDt")
-{
-  tmp_ts["updatedt", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").function("mlnet::lart::updateDt").return
-{
-  system(sprintf("cat /proc/%d/status > telemetry/lart/updatedt_%s.log", pid(), params));
-  printf("\"updatedt\": %d,\n", timestamp(tmp_ts["updatedt", "start"]))
-}
-
-probe process("libmultinet.so").mark("lart_walk_start")
-{
-  tmp_ts["mp", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").mark("lart_walk_end")
-{
-  system(sprintf("cat /proc/%d/status > telemetry/lart/walk_%s.log", pid(), params));
-  printf("\"walk\": %d,\n", timestamp(tmp_ts["mp", "start"]))
-}
-
-probe process("libmultinet.so").function("mlnet::lart::Dmat")
-{
-  tmp_ts["dmat", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").function("mlnet::lart::Dmat").return
-{
-  system(sprintf("cat /proc/%d/status > telemetry/lart/dmat_%s.log", pid(), params));
-  printf("\"dmat\": %d,\n", timestamp(tmp_ts["dmat", "start"]))
+  printf("lart,%s,", dataset);
 }
 
 probe process("libmultinet.so").mark("lart_ac_start")
 {
-  tmp_ts["cluster", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").mark("lart_ac_end")
-{
-  system(sprintf("cat /proc/%d/status > telemetry/lart/ac_%s.log", pid(), params));
-  printf("\"ac\": %d,\n", timestamp(tmp_ts["cluster", "start"]))
+  system(sprintf("cat /proc/%d/status > telemetry/lart_%s.log", pid(), dataset));
 }
 
 probe process("libmultinet.so").mark("lart_end")
 {
-  system(sprintf("cat /proc/%d/status > telemetry/lart/end_%s.log", pid(), params));
-  printf("\"total\": %d}},\n", timestamp(start));
+  printf("%d\n", timestamp(start));
   delete tmp_ts;
 }
 
@@ -96,43 +32,17 @@ probe process("libmultinet.so").mark("glouvain_start")
 {
   start = gettimeofday_ms();
   dataset = user_string($arg1);
-  move = user_string($arg2);
-  gamma = user_string($arg3);
-  omega = user_string($arg4);
-
-  print("{");
-  printf("\"method\": \"glouvain\",\n");
-  printf("\"params\": {\"dataset\":\"%s\",\n\"move\": \"%s\",\n\"gamma\":\"%s\",\n\"omega\":\"%s\"},\n", dataset, move, gamma, omega);
-  printf("\"passes\": {\n");
-
-  params = sprintf("%s_%s_%s_%s", dataset, move, gamma, omega);
+  printf("glouvain,%s,", dataset);
 }
 
-probe process("libmultinet.so").mark("glouvain_pass")
+probe process("libmultinet.so").function("glouvain_modularity")
 {
-  system(sprintf("cat /proc/%d/status > telemetry/glouvain/pass_%d_%s.log", pid(), $arg1, params));
-  tmp_ts["pass", "start"] = gettimeofday_ms();
-  printf("\"%d\": {\"phase\": [\n", $arg1);
-}
-
-probe process("libmultinet.so").mark("glouvain_first_phase_start")
-{
-  tmp_ts["phase", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").mark("glouvain_first_phase_end")
-{
-  printf("{\"dstep\": %s, \"dtot\": %s, \"time\": %d},\n", user_string($arg2), user_string($arg3), timestamp(tmp_ts["phase", "start"]));
-}
-
-probe process("libmultinet.so").mark("glouvain_pass_end")
-{
-  printf("], \"time\": %d},\n", timestamp(tmp_ts["pass", "start"]));
+  system(sprintf("cat /proc/%d/status > telemetry/glouvain_%s.log", pid(), dataset));
 }
 
 probe process("libmultinet.so").mark("glouvain_end")
 {
-  printf("]}}, \"size\": [%d, %d], \"Q\": %s, \"time\": %d},\n", $arg2, $arg3, user_string($arg4), timestamp(start));
+  printf("%d\n", timestamp(start));
   delete tmp_ts;
 }
 
@@ -141,43 +51,16 @@ probe process("libmultinet.so").mark("pmm_start")
 {
   start = gettimeofday_ms();
   dataset = user_string($arg1);
-  k = $arg2;
-  ell = $arg3;
-
-  print("{");
-  printf("\"method\": \"pmm\",\n");
-  printf("\"params\": {\"dataset\":\"%s\",\"k\": %d,\"ell\":%d},\n", dataset, k, ell);
-  printf("\"feature_ts\": [\n");
-
-  params = sprintf("%s_%d_%d", dataset, k, ell);
-  tmp_ts["feature", "start"] = gettimeofday_ms();
+  printf("pmm,%s,", dataset);
 }
 
-probe process("libmultinet.so").mark("pmm_svd_start")
+probe process("libmultinet.so").function("pmm_kmeans_start")
 {
-  printf("%d, ", timestamp(tmp_ts["feature", "start"]));
-  system(sprintf("cat /proc/%d/status > telemetry/pmm/svd_%s.log", pid(), params));
-  printf("],");
-  tmp_ts["svd", "start"] = gettimeofday_ms();
-}
-
-probe process("libmultinet.so").mark("pmm_svd_end")
-{
-  printf("\"svd\": %d,", timestamp(tmp_ts["svd", "start"]));
-}
-
-probe process("libmultinet.so").mark("pmm_kmeans_start")
-{
-  system(sprintf("cat /proc/%d/status > telemetry/pmm/kmeans_%s.log", pid(), params));
-  tmp_ts["kmeans", "start"] = gettimeofday_ms();
+  system(sprintf("cat /proc/%d/status > telemetry/glouvain_%s.log", pid(), dataset));
 }
 
 probe process("libmultinet.so").mark("pmm_end")
 {
- printf("\"kmeans\": %d, \"total\": %d},\n", timestamp(tmp_ts["kmeans", "start"]), timestamp(start));
-}
-
-probe end
-{
-  print("]\n");
+  printf("%d\n", timestamp(start));
+  delete tmp_ts;
 }

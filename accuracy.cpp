@@ -3,9 +3,8 @@
 #include <iostream>
 #include <fstream>
 
-const std::string result_path = "results/performance/";
-const std::string data_path = "data/performance/";
-
+const std::string result_path = "results/accuracy/";
+const std::string data_path = "data/accuracy/";
 
 mlnet::CommunityStructureSharedPtr read_truth(mlnet::MLNetworkSharedPtr mnet) {
 
@@ -99,15 +98,18 @@ void pmm(mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr trut
 	s.write();
 }
 
-
 int main() {
+
 	std::string command = "mkdir -p " + result_path;
 	if(system(command.c_str())) {
 		return 1;
 	}
 
-	std::vector<std::string> N = {"1k", "2k", "3k", "4k"};
-	std::vector<std::string> MU = {"03"};
+	std::vector<std::string> N = {
+			"1k",
+			"4k"
+		};
+	std::vector<std::string> MU = {"01", "02", "03", "04", "05", "06"};
 
 	for (auto n: N) {
 		for (auto mu: MU) {
@@ -121,14 +123,6 @@ int main() {
 			pmm(mnet, truth);
 		}
 	}
-
-
-	std::string dset = "antisocial_network";
-	mlnet::MLNetworkSharedPtr mnet = mlnet::read_multilayer(data_path + dset, dset, ',');
-	mlnet::CommunityStructureSharedPtr truth = read_truth(mnet);
-
-	glouvain(mnet, truth);
-	pmm(mnet, truth);
 
 	return 0;
 }
