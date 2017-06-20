@@ -15,8 +15,8 @@ struct stats
 	double community_ratio = 0.0;
 
 	std::string result_path;
-	stats(std::string result_path) {
-		this->result_path = result_path;
+	stats(std::string result_path, int layers) {
+		this->result_path = result_path + "_" + std::to_string(layers);
 	}
 
 	void write() {
@@ -33,7 +33,12 @@ double comm(mlnet::CommunityStructureSharedPtr c, mlnet::CommunityStructureShare
 double nmi(mlnet::CommunityStructureSharedPtr c, mlnet::CommunityStructureSharedPtr truth, int n);
 void write2file(mlnet::CommunityStructureSharedPtr c, std::string path);
 
-mlnet::CommunityStructureSharedPtr read_truth(mlnet::MLNetworkSharedPtr mnet);
+mlnet::CommunityStructureSharedPtr read_truth(mlnet::MLNetworkSharedPtr mnet, std::string data_path);
+
+void lart(std::string rpath, mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr truth, int t, double eps, double gamma);
+void glouvain(std::string rpath, mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr truth, std::string move, double gamma, double omega, int limit);
+void pmm(std::string rpath, mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr truth, int k, int ell);
+
 
 
 }

@@ -32,9 +32,9 @@ double nmi(mlnet::CommunityStructureSharedPtr c, mlnet::CommunityStructureShared
 	return normalized_mutual_information(c, truth, n);
 }
 
-mlnet::CommunityStructureSharedPtr read_truth(mlnet::MLNetworkSharedPtr mnet) {
+mlnet::CommunityStructureSharedPtr read_truth(mlnet::MLNetworkSharedPtr mnet, std::string tpath) {
 
-	std::fstream file("truth/" + mnet->name, std::ios_base::in);
+	std::fstream file(tpath + "_truth", std::ios_base::in);
 	std::string actor;
 	std::string community;
 
@@ -56,9 +56,6 @@ mlnet::CommunityStructureSharedPtr read_truth(mlnet::MLNetworkSharedPtr mnet) {
 			mlnet::NodeSharedPtr n = mnet->get_node(a,l);
 			if (n) {
 				result[community].insert(n);
-			} else {
-				mlnet::NodeSharedPtr node_ptr(new mlnet::node(0, a, l));
-				result[community].insert(node_ptr);
 			}
 		}
 	}
@@ -85,6 +82,46 @@ void write2file(mlnet::CommunityStructureSharedPtr c, std::string path) {
 	ofs.open(path, std::ofstream::out | std::ofstream::trunc);
 	(*c).print(ofs);
 	ofs.close();
+}
+
+
+void lart(std::string rpath, mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr truth, int t, double eps, double gamma) {
+	mlnet::lart l;
+
+	mlnet_evaluation::stats s(rpath + mnet->name + "_LART", mnet->get_layers()->size());
+	mlnet::CommunityStructureSharedPtr c = l.fit(mnet, t, eps, gamma);
+
+	s.modul_result = mlnet_evaluation::modul(mnet, c);
+	s.modul_gt = mlnet_evaluation::modul(mnet, truth);
+	s.nmi = mlnet_evaluation::nmi(c, truth, mnet->get_nodes()->size());
+	s.community_ratio = mlnet_evaluation::comm(c, truth);
+	s.write();
+}
+
+void glouvain(std::string rpath, mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr truth, std::string move, double gamma, double omega, int limit) {
+	mlnet::glouvain g;
+
+	mlnet_evaluation::stats s(rpath + mnet->name + "_GLOUVAIN", mnet->get_layers()->size());
+	mlnet::CommunityStructureSharedPtr c = g.fit(mnet, move, gamma, omega, limit);
+
+	s.modul_result = mlnet_evaluation::modul(mnet, c);
+	s.modul_gt = mlnet_evaluation::modul(mnet, truth);
+	s.nmi = mlnet_evaluation::nmi(c, truth, mnet->get_nodes()->size());
+	s.community_ratio = mlnet_evaluation::comm(c, truth);
+	s.write();
+}
+
+void pmm(std::string rpath, mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr truth, int k, int ell) {
+	mlnet::pmm p;
+
+	mlnet_evaluation::stats s(rpath + mnet->name + "_PMM", mnet->get_layers()->size());
+	mlnet::CommunityStructureSharedPtr c = p.fit(mnet, k, ell);
+
+	s.modul_result = mlnet_evaluation::modul(mnet, c);
+	s.modul_gt = mlnet_evaluation::modul(mnet, truth);
+	s.nmi = mlnet_evaluation::nmi(c, truth, mnet->get_nodes()->size());
+	s.community_ratio = mlnet_evaluation::comm(c, truth);
+	s.write();
 }
 
 }

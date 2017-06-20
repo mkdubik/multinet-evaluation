@@ -1,60 +1,64 @@
 global start
 global dataset
+global layers
 
 function timestamp:long(ts) {
   return gettimeofday_ms() - ts
 }
 
 /* START OF LART INSTRUMENTATION */
-probe process("libmultinet.so").mark("lart_start")
+probe process(@1).mark("lart_start")
 {
   start = gettimeofday_ms();
   dataset = user_string($arg1);
-  printf("lart,%s,", dataset);
+  layers = $arg2
+  printf("lart,%s,%d,", dataset, layers);
 }
 
-probe process("libmultinet.so").mark("lart_ac_start")
+probe process(@1).mark("lart_ac_start")
 {
-  system(sprintf("cat /proc/%d/status > telemetry/lart_%s.log", pid(), dataset));
+  system(sprintf("cat /proc/%d/status > telemetry/lart_%s_%d.log", pid(), dataset, layers));
 }
 
-probe process("libmultinet.so").mark("lart_end")
+probe process(@1).mark("lart_end")
 {
   printf("%d\n", timestamp(start));
 }
 
 /* START OF GLOUVAIN INSTRUMENTATION */
-probe process("libmultinet.so").mark("glouvain_start")
+probe process(@1).mark("glouvain_start")
 {
   start = gettimeofday_ms();
   dataset = user_string($arg1);
-  printf("glouvain,%s,", dataset);
+  layers = $arg2
+  printf("glouvain,%s,%d,", dataset, layers);
 }
 
-probe process("libmultinet.so").mark("glouvain_modularity")
+probe process(@1).mark("glouvain_modularity")
 {
-  system(sprintf("cat /proc/%d/status > telemetry/glouvain_%s.log", pid(), dataset));
+  system(sprintf("cat /proc/%d/status > telemetry/glouvain_%s_%d.log", pid(), dataset, layers));
 }
 
-probe process("libmultinet.so").mark("glouvain_end")
+probe process(@1).mark("glouvain_end")
 {
   printf("%d\n", timestamp(start));
 }
 
 /* START OF PMM INSTRUMENTATION */
-probe process("libmultinet.so").mark("pmm_start")
+probe process(@1).mark("pmm_start")
 {
   start = gettimeofday_ms();
   dataset = user_string($arg1);
-  printf("pmm,%s,", dataset);
+  layers = $arg2
+  printf("pmm,%s,%d,", dataset, layers);
 }
 
-probe process("libmultinet.so").mark("pmm_kmeans_start")
+probe process(@1).mark("pmm_kmeans_start")
 {
-  system(sprintf("cat /proc/%d/status > telemetry/glouvain_%s.log", pid(), dataset));
+  system(sprintf("cat /proc/%d/status > telemetry/pmm_%s_%d.log", pid(), dataset, layers));
 }
 
-probe process("libmultinet.so").mark("pmm_end")
+probe process(@1).mark("pmm_end")
 {
   printf("%d\n", timestamp(start));
 }

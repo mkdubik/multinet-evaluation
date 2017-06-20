@@ -2,7 +2,7 @@
 
 const std::string result_path = "results/";
 
-void lart(mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr truth) {
+/*void lart(mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr truth) {
 	mlnet::lart l;
 	std::string format = mnet->name + "/LART_";
 
@@ -99,4 +99,6 @@ int main(){
 	glouvain(mnet, truth);
 	pmm(mnet, truth);
 
-}
+}*/
+
+int main(){}
