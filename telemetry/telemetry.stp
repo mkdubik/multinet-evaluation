@@ -12,7 +12,7 @@ probe process(@1).mark("lart_start")
   start = gettimeofday_ms();
   dataset = user_string($arg1);
   layers = $arg2
-  printf("lart,%s,%d,", dataset, layers);
+  printf("lart,%s_%d,", dataset, layers);
 }
 
 probe process(@1).mark("lart_ac_start")

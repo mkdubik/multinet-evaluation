@@ -24,9 +24,9 @@ int main() {
 		"4k",
 	};
 
-	std::vector<std::string> MU = {"03"};
+	std::vector<std::string> MU = {"01", "02", "03", "04", "05", "06"};
 
-	/*for (auto l : L) {
+	for (auto l : L) {
 		for (auto n: N) {
 			for (auto mu: MU) {
 				std::string dset = n + "_" + mu;
@@ -36,20 +36,11 @@ int main() {
 				mlnet::CommunityStructureSharedPtr truth = mlnet_evaluation::read_truth(mnet, dset_full);
 
 				mlnet_evaluation::lart(rpath, mnet, truth, 3 * l, 1, 1);
-				mlnet_evaluation::glouvain(rpath, mnet, truth, "move", 1, 1);
+				mlnet_evaluation::glouvain(rpath, mnet, truth, "move", 1, 1, 4000);
 				mlnet_evaluation::pmm(rpath, mnet, truth, 40, 140);
 			}
 		}
-	}*/
-
-
-	std::string dset = "10k";
-	mlnet::MLNetworkSharedPtr mnet = mlnet::read_multilayer("data/" + dset, dset, ',');
-	mlnet::CommunityStructureSharedPtr truth = mlnet_evaluation::read_truth(mnet, "data/" + dset);
-
-	std::cout << "starting.." << std::endl;
-	//mlnet_evaluation::glouvain(rpath, mnet, truth, "move", 1, 1);
-	mlnet_evaluation::pmm(rpath, mnet, truth, 40, 140);
+	}
 
 	return 0;
 }
