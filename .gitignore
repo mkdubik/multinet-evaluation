@@ -1,4 +1,3 @@
-results/
 
 telemetry/
 !telemetry/aggregate.py
