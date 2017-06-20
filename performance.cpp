@@ -99,20 +99,21 @@ void pmm(mlnet::MLNetworkSharedPtr mnet, mlnet::CommunityStructureSharedPtr trut
 	s.write();
 }
 
-
 int main() {
 	std::string command = "mkdir -p " + result_path;
 	if(system(command.c_str())) {
 		return 1;
 	}
 
-	std::vector<std::string> N = {"1k", "2k", "3k", "4k"};
+	std::vector<std::string> N = {
+		"1k",
+		//"2k", "3k", "4k"
+	};
 	std::vector<std::string> MU = {"03"};
 
 	for (auto n: N) {
 		for (auto mu: MU) {
 			std::string dset = n + "_" + mu;
-
 			mlnet::MLNetworkSharedPtr mnet = mlnet::read_multilayer(data_path + dset, dset, ',');
 			mlnet::CommunityStructureSharedPtr truth = read_truth(mnet);
 
@@ -123,12 +124,12 @@ int main() {
 	}
 
 
-	std::string dset = "antisocial_network";
+	/*std::string dset = "20k_02";
 	mlnet::MLNetworkSharedPtr mnet = mlnet::read_multilayer(data_path + dset, dset, ',');
 	mlnet::CommunityStructureSharedPtr truth = read_truth(mnet);
 
 	glouvain(mnet, truth);
-	pmm(mnet, truth);
+	pmm(mnet, truth);*/
 
 	return 0;
 }

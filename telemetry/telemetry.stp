@@ -1,12 +1,9 @@
-global tmp_ts
 global start
 global dataset
 
 function timestamp:long(ts) {
   return gettimeofday_ms() - ts
 }
-
-global params
 
 /* START OF LART INSTRUMENTATION */
 probe process("libmultinet.so").mark("lart_start")
@@ -24,7 +21,6 @@ probe process("libmultinet.so").mark("lart_ac_start")
 probe process("libmultinet.so").mark("lart_end")
 {
   printf("%d\n", timestamp(start));
-  delete tmp_ts;
 }
 
 /* START OF GLOUVAIN INSTRUMENTATION */
@@ -35,7 +31,7 @@ probe process("libmultinet.so").mark("glouvain_start")
   printf("glouvain,%s,", dataset);
 }
 
-probe process("libmultinet.so").function("glouvain_modularity")
+probe process("libmultinet.so").mark("glouvain_modularity")
 {
   system(sprintf("cat /proc/%d/status > telemetry/glouvain_%s.log", pid(), dataset));
 }
@@ -43,7 +39,6 @@ probe process("libmultinet.so").function("glouvain_modularity")
 probe process("libmultinet.so").mark("glouvain_end")
 {
   printf("%d\n", timestamp(start));
-  delete tmp_ts;
 }
 
 /* START OF PMM INSTRUMENTATION */
@@ -54,7 +49,7 @@ probe process("libmultinet.so").mark("pmm_start")
   printf("pmm,%s,", dataset);
 }
 
-probe process("libmultinet.so").function("pmm_kmeans_start")
+probe process("libmultinet.so").mark("pmm_kmeans_start")
 {
   system(sprintf("cat /proc/%d/status > telemetry/glouvain_%s.log", pid(), dataset));
 }
@@ -62,5 +57,4 @@ probe process("libmultinet.so").function("pmm_kmeans_start")
 probe process("libmultinet.so").mark("pmm_end")
 {
   printf("%d\n", timestamp(start));
-  delete tmp_ts;
 }
