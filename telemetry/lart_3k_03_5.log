@@ -1,31 +1,31 @@
 Name:	performance
 State:	R (running)
-Tgid:	3902
+Tgid:	909
 Ngid:	0
-Pid:	3902
-PPid:	3900
+Pid:	909
+PPid:	907
 TracerPid:	0
 Uid:	1000	1000	1000	1000
 Gid:	1000	1000	1000	1000
 FDSize:	64
 Groups:	4 24 27 30 46 113 128 129 130 1000 
-NStgid:	3902
-NSpid:	3902
-NSpgid:	3513
-NSsid:	2150
-VmPeak:	21488853376 kB
-VmSize:	21481822356 kB
+NStgid:	909
+NSpid:	909
+NSpgid:	508
+NSsid:	2761
+VmPeak:	21482293852 kB
+VmSize:	21480358792 kB
 VmLck:	       0 kB
 VmPin:	       0 kB
-VmHWM:	15077208 kB
-VmRSS:	 5585980 kB
-VmData:	21481777444 kB
-VmStk:	     940 kB
-VmExe:	      80 kB
-VmLib:	   14932 kB
-VmPTE:	   19096 kB
-VmPMD:	     644 kB
-VmSwap:	 3305944 kB
+VmHWM:	 8709656 kB
+VmRSS:	 5779824 kB
+VmData:	21480314124 kB
+VmStk:	     704 kB
+VmExe:	      68 kB
+VmLib:	   14936 kB
+VmPTE:	   12468 kB
+VmPMD:	     608 kB
+VmSwap:	       0 kB
 HugetlbPages:	       0 kB
 Threads:	8
 SigQ:	0/63544
@@ -44,5 +44,5 @@ Cpus_allowed:	ff
 Cpus_allowed_list:	0-7
 Mems_allowed:	00000000,00000001
 Mems_allowed_list:	0
-voluntary_ctxt_switches:	117794
-nonvoluntary_ctxt_switches:	23069
+voluntary_ctxt_switches:	42
+nonvoluntary_ctxt_switches:	18525

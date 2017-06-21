@@ -15,7 +15,7 @@ int main() {
 	std::string dpath = "data/performance/";
 
 	std::vector<int> L = {
-		3,
+		//3,
 		5,
 	};
 
@@ -28,7 +28,7 @@ int main() {
 
 	std::vector<std::string> MU = {"03"};
 
-	/*for (auto l : L) {
+	for (auto l : L) {
 		for (auto n: N) {
 			for (auto mu: MU) {
 				std::string dset = n + "_" + mu;
@@ -37,17 +37,14 @@ int main() {
 				mlnet::MLNetworkSharedPtr mnet = mlnet::read_multilayer(dset_full, dset, ',');
 				mlnet::CommunityStructureSharedPtr truth = mlnet_evaluation::read_truth(mnet, dset_full);
 
-				if (l == 5) {
-					l = 1;
-				}
-				mlnet_evaluation::lart(rpath, mnet, truth, 3 * l, 1, 1);
-				mlnet_evaluation::glouvain(rpath, mnet, truth, "move", 1, 1, 4000);
-				mlnet_evaluation::pmm(rpath, mnet, truth, 40, 140);
+				mlnet_evaluation::lart(rpath, mnet, truth, 3, 1, 1);
+				//mlnet_evaluation::glouvain(rpath, mnet, truth, "move", 1, 1, 4000);
+				//mlnet_evaluation::pmm(rpath, mnet, truth, 40, 140);
 			}
 		}
-	}*/
+	}
 
-	std::string dset = "8k";
+	/*std::string dset = "8k";
 	mlnet::MLNetworkSharedPtr mnet = mlnet::read_multilayer("data/" + dset, dset, ',');
 	mlnet::CommunityStructureSharedPtr truth = mlnet_evaluation::read_truth(mnet, "data/" + dset);
 
@@ -57,6 +54,6 @@ int main() {
 	std::string dset10k = "10k";
 	mlnet::MLNetworkSharedPtr mnet10k = mlnet::read_multilayer("data/" + dset10k, dset10k, ',');
 	mlnet::CommunityStructureSharedPtr truth10k = mlnet_evaluation::read_truth(mnet10k, "data/" + dset10k);
-	mlnet_evaluation::glouvain(rpath, mnet10k, truth10k, "move", 1, 1, 0);
+	mlnet_evaluation::glouvain(rpath, mnet10k, truth10k, "move", 1, 1, 0);*/
 	return 0;
 }
