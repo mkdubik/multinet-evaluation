@@ -41,13 +41,14 @@ layers = {v : nx.Graph() for v in edges.keys()}
 val_map = {
 	0: 'r',
 	1: 'g',
-	2: '#e542f4',
+	2: 'b',
 	3: 'c',
 	4: 'm',
 	5: 'y',
 	6: 'k',
 	7: 'w',
-	8: 'b'
+	8: 'b',
+	9: 'p',
 }
 
 node_color=range(max(ccid) + 1)
