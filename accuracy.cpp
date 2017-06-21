@@ -15,12 +15,12 @@ int main() {
 	std::string dpath = "data/accuracy/";
 
 	std::vector<int> L = {
-		3,
+//		3,
 		5,
 	};
 
 	std::vector<std::string> N = {
-		"1k",
+//		"1k",
 		"4k",
 	};
 
@@ -34,6 +34,8 @@ int main() {
 
 				mlnet::MLNetworkSharedPtr mnet = mlnet::read_multilayer(dset_full, dset, ',');
 				mlnet::CommunityStructureSharedPtr truth = mlnet_evaluation::read_truth(mnet, dset_full);
+
+				std::cout << "running " << mu << std::endl;
 
 				mlnet_evaluation::lart(rpath, mnet, truth, 3 * l, 1, 1);
 				mlnet_evaluation::glouvain(rpath, mnet, truth, "move", 1, 1, 4000);
