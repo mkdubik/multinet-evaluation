@@ -1,9 +1,3 @@
-
-telemetry/
-!telemetry/aggregate.py
-!telemetry/telemetry.stp
-
-performance
 accuracy
 dk
 
