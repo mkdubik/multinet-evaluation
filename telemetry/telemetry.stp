@@ -1,5 +1,5 @@
 global start
-global dataset
+global actors
 global layers
 
 function timestamp:long(ts) {
@@ -10,14 +10,18 @@ function timestamp:long(ts) {
 probe process(@1).mark("lart_start")
 {
   start = gettimeofday_ms();
-  dataset = user_string($arg1);
+  actors = $arg1;
   layers = $arg2
-  printf("lart,%s_%d,", dataset, layers);
 }
 
 probe process(@1).mark("lart_ac_start")
 {
-  system(sprintf("cat /proc/%d/status > telemetry/lart_%s_%d.log", pid(), dataset, layers));
+  system(sprintf("cat /proc/%d/status > %s/lart_%d_%d.log", pid(), @2, actors, layers));
+}
+
+probe process(@1).mark("lart_ac_end")
+{
+  system(sprintf("cat /proc/%d/status > %s/lart_%d_%d.log", pid(), @2, actors, layers));
 }
 
 probe process(@1).mark("lart_end")
@@ -29,18 +33,18 @@ probe process(@1).mark("lart_end")
 probe process(@1).mark("glouvain_start")
 {
   start = gettimeofday_ms();
-  dataset = user_string($arg1);
+  actors = $arg1;
   layers = $arg2
-  printf("glouvain,%s,%d,", dataset, layers);
 }
 
 probe process(@1).mark("glouvain_modularity")
 {
-  system(sprintf("cat /proc/%d/status > telemetry/glouvain_%s_%d.log", pid(), dataset, layers));
+  system(sprintf("cat /proc/%d/status > %s/glouvain_%d_%d.log", pid(), @2, actors, layers));
 }
 
 probe process(@1).mark("glouvain_end")
 {
+  system(sprintf("cat /proc/%d/status > %s/glouvain_%d_%d.log", pid(), @2, actors, layers));
   printf("%d\n", timestamp(start));
 }
 
@@ -48,17 +52,12 @@ probe process(@1).mark("glouvain_end")
 probe process(@1).mark("pmm_start")
 {
   start = gettimeofday_ms();
-  dataset = user_string($arg1);
+  actors = $arg1;
   layers = $arg2
-  printf("pmm,%s,%d,", dataset, layers);
-}
-
-probe process(@1).mark("pmm_kmeans_start")
-{
-  system(sprintf("cat /proc/%d/status > telemetry/pmm_%s_%d.log", pid(), dataset, layers));
 }
 
 probe process(@1).mark("pmm_end")
 {
+  system(sprintf("cat /proc/%d/status > %s/pmm_%d_%d.log", pid(), @2, actors, layers));
   printf("%d\n", timestamp(start));
 }

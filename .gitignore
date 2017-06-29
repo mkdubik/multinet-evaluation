@@ -3,6 +3,7 @@
 
 libmlnet_evaluation.so
 
+*.pyc
 #Cmake junk
 CMakeCache.txt
 CMakeFiles/

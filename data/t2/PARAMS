@@ -1,0 +1,14 @@
+Number of nodes set to: 1000 & 4000
+Average degree set to: 20.0
+Maximal degree set to: 50
+Mixing parameter set to: 0.1
+Degree powerlaw set to: 2.0
+Community powerlaw set to: 1.0
+Overlaping nodes set to: 0
+Overlaping memberships set to: 0
+Maximal community set to: 100
+Minimal community set to: 10
+Number of layers set to: 2 - 5
+Degree change chance set to: 0.0
+Membership swap chance set to: 0.0
+Layers mixing param set to: 2.0
