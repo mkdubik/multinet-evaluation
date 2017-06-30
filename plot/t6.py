@@ -5,10 +5,8 @@ import operator
 import collections
 from itertools import count
 
-import multinetx as mx
 import networkx as nx
 import numpy as np
-import sys
 
 from t5 import collect_data
 
@@ -138,18 +136,18 @@ def main():
 				stats2[k][truth[actor]] = 1
 
 	left = [
-		'Radikale Venstre',
+		'Dansk Folkeparti',
 		'Venstre',
 		'Liberal Alliance',
-		'Socialistisk Folkeparti',
-		'Socialdemokratiet'
+		'Det Konservative Folkeparti',
+		'KristenDemokraterne',
 	]
 
 	right = [
-		'Dansk Folkeparti',
-		'Det Konservative Folkeparti',
+		'Socialistisk Folkeparti',
+		'Radikale Venstre',
+		'Socialdemokratiet',
 		'Alternativet',
-		'KristenDemokraterne',
 		'Enhedslisten'
 	]
 	out = 'Udenfor partierne'
@@ -201,4 +199,8 @@ def main():
 
 
 if __name__ == "__main__":
+	from os import sys, path
+	sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/plot')
+	print sys.path
+	import multinetx as mx
 	main()

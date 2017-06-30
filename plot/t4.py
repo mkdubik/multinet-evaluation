@@ -32,31 +32,34 @@ def main():
 		y = [y[k] for k in sorted(y.keys())]
 		a1, = plt.plot(x, y, '-', linewidth=2, label = method)
 		return a1
+
+
+
 	plt.figure(1)
 
 	a = plot(data, 'glouvain', 1000)
-	b = plot(data, 'lart', 1000)
-	c = plot(data, 'pmm', 1000)
+	b = plot(data, 'pmm', 1000)
+	c = plot(data, 'lart', 1000)
+
 
 	plt.xlabel('Mixing parameter, $\mu$', fontsize = 14)
 	plt.ylabel('Normalized Mutual Information (NMI)', fontsize = 14)
 	plt.legend(handles = [a, b, c], loc = 3, title = 'N = 1000, L = 3')
 	plt.xticks(x)
-	plt.yticks([float(x) / 10 for x in xrange(11)])
+	plt.yticks([float(z) / 10 for z in xrange(11)])
 	plt.savefig('t4a')
 
-	'''
+	plt.figure(2)
 	a = plot(data, 'glouvain', 4000)
-	b = plot(data, 'lart', 4000)
-	c = plot(data, 'pmm', 4000)
+	b = plot(data, 'pmm', 4000)
+	c = plot(data, 'lart', 4000)
 
 	plt.xlabel('Mixing parameter, $\mu$', fontsize = 14)
 	plt.ylabel('Normalized Mutual Information (NMI)', fontsize = 14)
 	plt.legend(handles = [a, b, c], loc = 3, title = 'N = 4000, L = 3')
 	plt.xticks(x)
-	plt.yticks([float(x) / 10 for x in xrange(11)])
-	plt.savefig('t4a')
-	'''
+	plt.yticks([float(o) / 10 for o in xrange(11)])
+	plt.savefig('t4b')
 
 
 

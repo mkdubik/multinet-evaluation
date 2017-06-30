@@ -1,0 +1,48 @@
+Name:	synthetic
+State:	R (running)
+Tgid:	2380
+Ngid:	0
+Pid:	2380
+PPid:	2378
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	64
+Groups:	4 24 27 30 46 113 128 129 130 1000 
+NStgid:	2380
+NSpid:	2380
+NSpgid:	19238
+NSsid:	3449
+VmPeak:	  286244 kB
+VmSize:	  267448 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	  249988 kB
+VmRSS:	  231604 kB
+VmData:	  225752 kB
+VmStk:	    2180 kB
+VmExe:	      48 kB
+VmLib:	   12604 kB
+VmPTE:	     536 kB
+VmPMD:	      12 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	5/63544
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001800
+SigCgt:	0000000180000000
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+Cpus_allowed:	ff
+Cpus_allowed_list:	0-7
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	2
+nonvoluntary_ctxt_switches:	23

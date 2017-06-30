@@ -12,7 +12,7 @@ def process_memory_log(contents):
 		if k == 'VmHWM':
 			return v.replace('\t', '').split()[0]
 
-	raise Exception(contents + " missing VmRSS")
+	raise Exception(contents + " missing VmHWM")
 
 def collect_data(path):
 	data = {'lart':{}, 'glouvain':{}, 'pmm':{}}
@@ -45,8 +45,8 @@ def main():
 		return a1
 
 	a = plot(data, 'glouvain', 0)
-	b = plot(data, 'lart', 0)
-	c = plot(data, 'pmm', 0)
+	b = plot(data, 'pmm', 0)
+	c = plot(data, 'lart', 0)
 
 	plt.xlabel('Actors (thousand)', fontsize = 14)
 	plt.ylabel('computational time (ms)', fontsize = 14)
@@ -58,8 +58,8 @@ def main():
 	plt.figure(2)
 
 	a = plot(data, 'glouvain', 1)
-	b = plot(data, 'lart', 1)
-	c = plot(data, 'pmm', 1)
+	b = plot(data, 'pmm', 1)
+	c = plot(data, 'lart', 1)
 
 	plt.xlabel('Actors (thousand)', fontsize = 14)
 	plt.ylabel('peak memory usage (megabytes)', fontsize = 14)
