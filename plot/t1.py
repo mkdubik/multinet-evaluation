@@ -49,7 +49,7 @@ def main():
 	c = plot(data, 'lart', 0)
 
 	plt.xlabel('Actors (thousand)', fontsize = 14)
-	plt.ylabel('computational time (ms)', fontsize = 14)
+	plt.ylabel('computational time (s)', fontsize = 14)
 	plt.legend(handles = [a, b, c], loc = 2, title = 'L = 3, $\mu$ = 0.3')
 	plt.xticks(x)
 	plt.savefig('t1a')

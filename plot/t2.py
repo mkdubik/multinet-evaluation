@@ -51,7 +51,7 @@ def main():
 	c = plot(data, 'lart', 0, 1000)
 
 	plt.xlabel('Layers', fontsize = 14)
-	plt.ylabel('computational time (ms)', fontsize = 14)
+	plt.ylabel('computational time (s)', fontsize = 14)
 	plt.legend(handles = [a, b, c], loc = 2, title = 'N = 1000, $\mu$ = 0.3')
 	plt.xticks(x)
 	plt.savefig('t2a')
@@ -73,7 +73,7 @@ def main():
 	c = plot(data, 'lart', 0, 4000)
 
 	plt.xlabel('Layers', fontsize = 14)
-	plt.ylabel('computational time (ms)', fontsize = 14)
+	plt.ylabel('computational time (s)', fontsize = 14)
 	plt.legend(handles = [a, b, c], loc = 2, title = 'N = 4000, $\mu$ = 0.3')
 	plt.xticks(x)
 	plt.savefig('t2c')
