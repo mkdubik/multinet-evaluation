@@ -28,20 +28,24 @@ int main(int argc, char *argv[]) {
 	mlnet::CommunityStructureSharedPtr truth = mlnet_evaluation::read_truth(mnet, dset_p);
 
 	mlnet_evaluation::stats s;
-	int t = mnet->get_layers()->size() * 3;
 
-	double eps = 1.0;
+	std::vector<int> steps = {3, 6, 9, 12};
+	std::vector<double> eps = {0.1, 0.5, 1.0, 1.5};
 	std::vector<double> gamma = {0.25, 0.5, 1.0, 1.5, 2.0};
 
-	for (auto g: gamma) {
-		s = mlnet_evaluation::lart(mnet, truth, t, eps, g);
-		std::string write = "results/" + test + "/lart_" + std::to_string(g) + "_" + dset_n;
-		s.write(write);
-		s.write_community(write + "_community");
+
+	for (auto t: steps) {
+		for (auto e: eps) {
+			for (auto g: gamma) {
+				s = mlnet_evaluation::lart(mnet, truth, t, e, g);
+				std::string write = "results/" + test + "/lart_" + std::to_string(t) + "_" + std::to_string(e) + "_" + std::to_string(g) + "_" + dset_n;
+				s.write(write);
+				s.write_community(write + "_community");
+			}
+		}
 	}
 
 	std::vector<double> omega = {0.1, 0.5, 1.0};
-
 	for (auto g: gamma) {
 		for (auto o: omega) {
 			s = mlnet_evaluation::glouvain(mnet, truth, "move", g, o, 4000);
@@ -52,8 +56,8 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	std::vector<int> k = {3, 5, 10, 15, 20, 30};
-	std::vector<int> ell = {140, 150, 160};
+	std::vector<int> k = {3, 5, 10, 15, 20, 30, 40, 50};
+	std::vector<int> ell = {100, 110, 120, 130, 140, 150, 160};
 
 	for (auto k_: k) {
 		for (auto l: ell) {

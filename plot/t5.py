@@ -15,7 +15,7 @@ def collect_data(path):
 		if method == 'pmm' or method == 'glouvain':
 			params = [params[1], params[2]]
 		if method == 'lart':
-			params = [params[1]]
+			params = [params[1], params[2], params[3]]
 
 		nmi = 0
 		with open(path + '/' + file) as fd:
@@ -34,13 +34,15 @@ def main():
 		y = data[method][key]
 		return y, key
 
-	print data['glouvain']['1.0_1.0']
-	print data['lart']['1.0']
-	print data['pmm']['30.0_140.0']
+	print "Default:"
+	print 'LART', data['lart']['9.0_1.0_1.0'], '9.0_1.0_1.0'
+	print 'PMM', data['pmm']['30.0_140.0'], '30.0_140.0'
+	print 'Glouvain', data['glouvain']['1.0_1.0'], '1.0_1.0'
 
-	print best(data, 'glouvain')
-	print best(data, 'lart')
-	print best(data, 'pmm')
+	print "Best:"
+	print 'LART', best(data, 'lart')
+	print 'PMM', best(data, 'pmm')
+	print 'Glouvain', best(data, 'glouvain')
 
 
 if __name__ == "__main__":

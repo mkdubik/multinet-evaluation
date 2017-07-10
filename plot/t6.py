@@ -1,16 +1,18 @@
-from pdb import set_trace
+import sys
 from os import listdir
-import matplotlib.pyplot as plt
 import operator
 import collections
+from pprint import pprint
 from itertools import count
 
+import matplotlib.pyplot as plt
 import networkx as nx
+import multinetx as mx
 import numpy as np
 
 from t5 import collect_data
 
-
+from pdb import set_trace
 
 def collect_community(path):
 	files = filter(lambda x: '_community' in x, listdir(path))
@@ -33,8 +35,6 @@ def collect_community(path):
 
 	return data
 
-
-
 def main():
 	data = collect_data('results/t6/')
 	comm = collect_community('results/t6/')
@@ -44,18 +44,18 @@ def main():
 		y = data[method][key]
 		return y, key, method
 
-	print data['glouvain']['1.0_1.0']
-	print data['lart']['1.0']
-	print data['pmm']['30.0_140.0']
+	print 'LART', data['lart']['9.0_1.0_1.0']
+	print 'PMM', data['pmm']['30.0_140.0']
+	print 'Glouvain', data['glouvain']['1.0_1.0']
 
 
 	gl = find_best(data, 'glouvain')
 	ll = find_best(data, 'lart')
 	pl = find_best(data, 'pmm')
 
-	print gl
-	print ll
-	print pl
+	print 'LART', ll
+	print 'PMM', pl
+	print 'Glouvain', gl
 
 	best = max([gl, ll, pl], key=operator.itemgetter(0))
 	best_comm = {}
@@ -114,10 +114,10 @@ def main():
 		#inter_adjacency_matrix = adj_block)
 
 	mg.set_edges_weights(intra_layer_edges_weight=1)
-	#                     inter_layer_edges_weight=2)
+	                     #inter_layer_edges_weight=2)
 
 
-	fig = plt.figure(figsize=(10, 10))
+	fig = plt.figure(figsize=(16, 16))
 	plt.title('Twitter data of the Danish 2015 election')
 
 	stats = collections.defaultdict(list)
@@ -164,43 +164,65 @@ def main():
 			if k1 in right:
 				pscore -= (stats2[k][k1] * 1)
 
-			stats2[k][k1] = float(v1) / float(total)
+			stats2[k][k1] = round(float(v1) / float(total), 2)
 
-		stats2[k]['pscore'] = pscore
+		stats2[k]['nodes'] = filter(lambda x, i = mg, k = k: i.node[x]['label'] == k, mg.node)
+		stats2[k]['pscore'] = pscore / float(total)
 
 	stats2 = dict(stats2)
-	colors = [stats2[mg.node[n]['label']]['pscore'] for n in mg.nodes()]
+
+	if len(sys.argv) > 1 and sys.argv[1] == 'heat':
+		cmap = plt.get_cmap('RdBu_r')
+		colors = [stats2[mg.node[n]['label']]['pscore'] for n in mg.nodes()]
+
+		pos = mx.get_position(mg, nx.spring_layout(layers[layers.keys()[2]],
+				weight ='pscore'),
+				layer_vertical_shift=0.2,
+				layer_horizontal_shift=0.0,
+				proj_angle=47)
+
+		for key, val in stats2.items():
+			set_trace()
+			mx.draw_networkx_nodes(mg, pos=pos,node_size=100, with_labels=False,
+							nodelist = val['nodes'],
+							label = key,
+							node_color = [colors[n] for n in val['']],
+							cmap = cmap)
+	else:
+		val_map = {
+			0: 'k',
+			1: 'r',
+			2: 'g',
+			3: 'b',
+			4: 'c',
+			5: 'm',
+			6: 'y',
+			7: '0.75',
+			8: 'w',
+
+		}
+		colors = [val_map[mg.node[n]['label']] for n in mg.nodes()]
+		pos = mx.get_position(mg, nx.spring_layout(layers[layers.keys()[2]]),
+							layer_vertical_shift=0.2,
+							layer_horizontal_shift=0.0,
+							proj_angle=47)
+
+		for k, v in stats2.items():
+			mx.draw_networkx_nodes(mg, pos=pos,node_size=100, with_labels=False,
+							nodelist = v['nodes'],
+							label = k,
+							node_color = [colors[n] for n in v['nodes']],
+							cmap=plt.get_cmap('Set2'))
+
+	mx.draw_networkx_edges(mg, pos=pos, edge_color = 'b')
 
 
-	from pprint import pprint
-	pprint(stats2)
-
-
-	pos = mx.get_position(mg,
-						nx.spring_layout(layers[layers.keys()[2]], weight = 'pscore'),
-						#mx.fruchterman_reingold_layout(layers[layers.keys()[2]], dim = 3, k = 1, iterations = 1000),
-						layer_vertical_shift=0.2,
-						layer_horizontal_shift=0.0,
-						proj_angle=47)
-	mx.draw_networkx(mg,pos=pos,node_size=100, with_labels=False,
-					labels = {k:v['label'] if 'label' in v else 'missing' for k, v in mg.node.items()},
-					node_color = colors,
-					cmap=plt.get_cmap('RdBu_r'),
-					edge_color=[mg[a][b]['weight'] for a,b in mg.edges()])
-
-	import matplotlib.patches as mpatches
-	red_patch = mpatches.Patch(color='red', label='The red data')
-
-	#plt.legend(handles=[red_patch])
-	#ax2.legend(scatterpoints=1)
+	fig.tight_layout()
+	plt.legend(numpoints=1, loc=1)
 	plt.xticks([])
 	plt.yticks([])
 	plt.show()
 
 
 if __name__ == "__main__":
-	from os import sys, path
-	sys.path.append(path.dirname(path.dirname(path.abspath(__file__))) + '/plot')
-	print sys.path
-	import multinetx as mx
 	main()
